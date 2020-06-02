@@ -12,6 +12,7 @@ if __name__ == "__main__":
         data = json.loads(line)
         soup = BeautifulSoup(data["content"], "html.parser")
         divs = soup.find_all("div", class_="theorypass_question")
+        assert len(divs) == len(data["json"])
 
         for div in divs:
             qid = div.ul["data-question_id"]
@@ -24,3 +25,6 @@ if __name__ == "__main__":
             front = question + "\n\n" + "\n".join(answers)
             back = "\n".join(answer for c, answer in zip(correct, answers) if c)
             writer.writerow([front, back])
+
+            assert len(answers) == len(correct)
+            assert all(c in {0, 1} for c in correct)
